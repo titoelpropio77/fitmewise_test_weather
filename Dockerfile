@@ -47,12 +47,19 @@ RUN echo "ServerName laravel-app.local" >> /etc/apache2/apache2.conf && \
     sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf && \
     a2enmod rewrite headers
 
-# Crear usuario para Laravel Octane (si lo usas)
-RUN groupadd -g $WWWGROUP octane && \
-    useradd -ms /bin/bash -u $WWWUSER -g $WWWGROUP octane
+
 
 # Permisos
 RUN chown -R $WWWUSER:$WWWGROUP /var/www && chmod -R 775 /var/www
+
+COPY . .
+# Instala dependencias de Laravel
+RUN touch database/database.sqlite \
+    && composer install --no-interaction --prefer-dist --optimize-autoloader
+
+
+## Opcional: constuir assets
+RUN npm install && npm run build
 
 # Copiar proyecto
 COPY --chown=$WWWUSER:$WWWGROUP . /var/www/html

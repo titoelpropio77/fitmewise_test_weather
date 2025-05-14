@@ -41,7 +41,7 @@
             "chmod -R 777 storage/framework/",
             "chmod -R 777 storage/logs/",
             "chmod -R 775 bootstrap/cache/",
-            "chmod 777 database/database.sqlite"
+            "[ -f database/database.sqlite ] && chmod 777 database/database.sqlite || true"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
