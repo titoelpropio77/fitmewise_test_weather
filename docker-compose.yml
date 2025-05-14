@@ -1,0 +1,23 @@
+version: '3.9'
+services:
+    app:
+        image: test_fitmewise
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        ports:
+        - "8085:80"
+        - "5174:5173"
+        volumes:
+            - .:/var/www/html
+        environment:
+        - NODE_ENV=development
+        networks:
+            fitmewise_web_net:
+                aliases:
+                    - fitmewise_web
+
+networks:
+  fitmewise_web_net:
+    name: fitmewise_web_net
+    driver: bridge
